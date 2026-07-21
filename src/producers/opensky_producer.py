@@ -2,7 +2,7 @@ import os
 import time
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from confluent_kafka import Producer
 
@@ -55,7 +55,7 @@ def fetch_and_send():
             # Формируем плоский JSON
             aircraft_msg = {
                 "source": "opensky",
-                "ingested_at": datetime.utcnow().isoformat() + "Z",
+                "ingested_at": datetime.now(timezone.utc).isoformat(),
                 "payload": {
                     "icao24": icao24,
                     "callsign": state[1],
@@ -92,7 +92,7 @@ def fetch_and_send():
 if __name__ == '__main__':
     print("🚀 Продюсер OpenSky запущен.")
     
-    INTERVAL = 15 
+    INTERVAL = 45 
     
     while True:
         fetch_and_send()
